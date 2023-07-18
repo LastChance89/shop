@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const user = require('./db/model/user');
 const logger = require('./logging/logger')
+const jwt = require('jsonwebtoken')
+
 
 //need this to parse the request body. Without the body will be undefined. 
 router.use(express.urlencoded({extended:true}));
@@ -16,15 +18,27 @@ router.use('/', (req,res,next)=>{
     next();
 })
 
-router.post('/test', function(req,res){
-    user.findOne({"login_name":req.body.username, "password": req.body.password}).then( (data) =>{
-      res.send(data);
-    }).catch((err)=>{
-        logger.error(err);
-        res.send(err);
-    })
+router.post('/login', function(req,res){
 
-});
+
+        user.findOne({"login_name":req.body.username, "password": req.body.password}).then( (data) =>{
+            if(data){
+                const payload =  {
+                    user:{
+                        login_name:user.login_name
+                    }
+                }
+                const token = jwt.sign(payload,'random');
+                res.json({token})
+    
+            } 
+          }).catch((err)=>{
+              logger.error(err);
+          })
+    } 
+
+    
+);
 
 
 

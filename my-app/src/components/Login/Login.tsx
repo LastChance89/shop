@@ -4,9 +4,12 @@ import { useState, ChangeEvent } from "react";
 import { postRequest } from "../../services/PostService";
 import './Login.css'
 
+interface LoginPage {
+    close: ()=> any;
+}
 
-function Login(){
-   // const navigate = useNavigate();
+
+function Login(props: LoginPage){
     const [loginName, setLoginName] = useState('');
     const [password, setPassword] = useState('');
 
@@ -25,8 +28,10 @@ function Login(){
             password: password
         })
         postRequest(data).then((data) => {
+            console.log(data)
             if (data != "") {
-                //navigate("/page");
+                localStorage.setItem('jwtToken',data.token);
+                props.close()
             }
         });
     }

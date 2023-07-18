@@ -7,6 +7,6 @@ export const  postRequest  = async(data:String): Promise<any> =>{
     const options = { 
         headers: {"content-type": "application/json"}
     };
-   return await  axios.post("/router/test",data,options).then(response => response.data);
+   return await  axios.post("/router/login",data,options).then(response => response.data);
 
 }

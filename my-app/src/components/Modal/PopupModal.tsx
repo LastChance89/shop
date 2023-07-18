@@ -1,7 +1,7 @@
-import React, { Component, ReactNode } from "react";
+import React, { Component, ReactElement, ReactNode } from "react";
 import './PopupModal.css'
 interface ModalType {
-    children: ReactNode;
+    children: ReactElement;
     isOpen: boolean;
     close: ()=> any;
 }
@@ -14,7 +14,7 @@ function Popup(props: ModalType) {
              <div className="modal-overlay">
                 <div className="modal-box"> 
                 <button className="close-modal" onClick={props.close}>X</button>
-                    {props.children}
+                    {React.cloneElement(props.children)}
                 </div>
              </div>
 

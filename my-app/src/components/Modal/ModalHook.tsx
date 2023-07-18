@@ -1,10 +1,9 @@
 import {useState} from "react";
 
 function useModal(){
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setOpen] = useState(false);
     const display = () =>{
-        console.log("BANG!")
-        setIsOpen(!isOpen);
+        setOpen(!isOpen);
     }
     return {
         isOpen, display
