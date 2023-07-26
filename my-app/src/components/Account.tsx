@@ -11,21 +11,41 @@ import Login from './Login/Login';
 
 
 function Account() {
-    const {isOpen, display} = openModal();
+    const { isOpen, display } = openModal();
+    const [isLoggedIn, setLoggedIn] = useState(false);
 
-    const handleLoginSuccess = () =>{
+    const handleLoginSuccess = () => {
         display();
-        //@TODO: will impliment a setup to replace the login button with logout / other  information. 
+        setLoggedIn(true);
+    }
+    const logout = () => {
+        //Probably a better way to do this. 
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('loginName');
+        setLoggedIn(false);
     }
 
-
     return (
-        <div> 
-            <button onClick={display}>Login</button>
-            <Popup children={<Login close={handleLoginSuccess}/>}  isOpen = {isOpen} close={display} ></Popup>
+        <div>
+            {isLoggedIn ? (
+                <div>
+                    <p>Welcome {localStorage.loginName}</p>
+                    <button onClick={logout}>LogOut</button>
+                </div>
+            )
+                : (
+                    <div>
+                        <button onClick={display}>Login</button>
+                        <Popup children={<Login close={handleLoginSuccess} />} isOpen={isOpen} close={display} ></Popup>
+                    </div>
+                )
+            }
         </div>
+
+
     )
 }
+
 
 export default Account;
 

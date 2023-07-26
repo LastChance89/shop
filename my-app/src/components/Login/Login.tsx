@@ -28,9 +28,10 @@ function Login(props: LoginPage){
             password: password
         })
         postRequest(data).then((data) => {
-            console.log(data)
             if (data != "") {
                 localStorage.setItem('jwtToken',data.token);
+                //This probably not optimal but it works. 
+                localStorage.setItem('loginName',loginName);
                 props.close()
             }
         });

@@ -24,7 +24,7 @@ router.post('/login', function(req,res){
         user.findOne({"login_name":req.body.username, "password": req.body.password}).then( (data) =>{
             if(data){
                 const payload =  {
-                    user:{
+                    user_l:{
                         login_name:user.login_name
                     }
                 }
