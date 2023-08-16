@@ -13,8 +13,7 @@ router.use(express.json())
 router.use('/', (req,res,next)=>{
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers','*');
-    res.contentType('application/json');
-    
+    res.contentType('application/json');   
     next();
 })
 
@@ -29,6 +28,8 @@ router.post('/login', function(req,res){
                     }
                 }
                 const token = jwt.sign(payload,'random');
+                //res.status(200).cookie("token", token, {httpOnly:true, path:'/',domain: 'localhost'}).json({payload});
+                //res.cookie("token", token, {httpOnly:true}).send({login_name});
                 res.json({token})
     
             } 
@@ -40,6 +41,8 @@ router.post('/login', function(req,res){
     
 );
 
-
+router.post('/refresh',(req, res)=>{
+    console.log("Potato");
+});
 
 module.exports = router;

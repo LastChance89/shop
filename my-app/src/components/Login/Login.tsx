@@ -1,9 +1,9 @@
 import React from 'react';
 //import { useNavigate } from "react-router-dom";
 import { useState, ChangeEvent } from "react";
-import { postRequest } from "../../services/PostService";
+import { postRequestLogin } from "../../services/PostService";
 import './Login.css'
-
+import Cookies from 'js-cookie';
 interface LoginPage {
     close: ()=> any;
 }
@@ -27,11 +27,10 @@ function Login(props: LoginPage){
             username: loginName,
             password: password
         })
-        postRequest(data).then((data) => {
+        postRequestLogin(data).then((data) => {
             if (data != "") {
-                localStorage.setItem('jwtToken',data.token);
-                //This probably not optimal but it works. 
-                localStorage.setItem('loginName',loginName);
+                sessionStorage.setItem('loginName',loginName);
+                Cookies.set('token',data.token,{'SameSite':'Lax'});
                 props.close()
             }
         });

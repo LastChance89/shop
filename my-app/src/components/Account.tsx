@@ -6,22 +6,28 @@ import { postRequest } from "../services/PostService";
 import Popup from './Modal/PopupModal'
 import openModal from './Modal/ModalHook';
 import Login from './Login/Login';
-
+import Cookies from 'js-cookie';
 
 
 
 function Account() {
+    const checkLoginState = () =>{
+        if(Cookies.get('token')){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     const { isOpen, display } = openModal();
-    const [isLoggedIn, setLoggedIn] = useState(false);
-
+    const [isLoggedIn, setLoggedIn] = useState(checkLoginState());
+    const IamLoggedIn = false;
     const handleLoginSuccess = () => {
         display();
         setLoggedIn(true);
     }
     const logout = () => {
-        //Probably a better way to do this. 
-        localStorage.removeItem('jwtToken');
-        localStorage.removeItem('loginName');
+        Cookies.remove('token')
         setLoggedIn(false);
     }
 
@@ -29,7 +35,8 @@ function Account() {
         <div>
             {isLoggedIn ? (
                 <div>
-                    <p>Welcome {localStorage.loginName}</p>
+                    {/* this changed not work will fix later*/}
+                    <p>Welcome {sessionStorage.loginName}</p>
                     <button onClick={logout}>LogOut</button>
                 </div>
             )
