@@ -13,21 +13,22 @@ router.use(express.json())
 router.use('/', (req,res,next)=>{
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers','*');
-    res.contentType('application/json');   
+    res.contentType('application/json');
+    
     next();
 })
 
-router.post('/login', function(req,res){
+router.post('/login', (req,res) =>{
 
 
         user.findOne({"login_name":req.body.username, "password": req.body.password}).then( (data) =>{
             if(data){
                 const payload =  {
                     user_l:{
-                        login_name:user.login_name
+                        login_name:data.login_name
                     }
                 }
-                const token = jwt.sign(payload,'random');
+                const token = jwt.sign(payload,'random', {expiresIn: '20s'});
                 //res.status(200).cookie("token", token, {httpOnly:true, path:'/',domain: 'localhost'}).json({payload});
                 //res.cookie("token", token, {httpOnly:true}).send({login_name});
                 res.json({token})
@@ -41,8 +42,26 @@ router.post('/login', function(req,res){
     
 );
 
-router.post('/refresh',(req, res)=>{
-    console.log("Potato");
+router.post('/check', (req,res)=>{
+    var cookie = req.body.cookie;
+    var payload = null;
+    jwt.verify(cookie,'random', (error, decode)=>{
+        if(error){
+            payload ={
+                'error':error
+            };
+            
+        }
+        else{
+            //console.log(decode);
+            payload ={
+                'token':cookie
+            };
+        }
+    })
+    //junk return for now. 
+    res.json(payload);
+
 });
 
 module.exports = router;

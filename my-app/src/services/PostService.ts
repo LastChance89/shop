@@ -13,12 +13,12 @@ export const  postRequestLogin  = async(data:String): Promise<any> =>{
 }
 
 //used for other reuqests will fix later. 
-export const  postRequest  = async(data:String): Promise<any> =>{
+export const  postRequest  = async(data:String, endpoint: String): Promise<any> =>{
     axios.defaults.baseURL = url;
-    axios.defaults.withCredentials = true;
+    //axios.defaults.withCredentials = true;
     const options = { 
         headers: {"content-type": "application/json"}
     };
-   return await  axios.post("/router/login",data,options).then(response => response.data);
+   return await  axios.post("/router/"+endpoint,data,options).then(response => response.data);
 
 }

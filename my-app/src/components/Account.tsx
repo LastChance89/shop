@@ -9,18 +9,40 @@ import Login from './Login/Login';
 import Cookies from 'js-cookie';
 
 
-
 function Account() {
-    const checkLoginState = () =>{
-        if(Cookies.get('token')){
-            return true;
+
+    const { isOpen, display } = openModal();
+    const [isLoggedIn, setLoggedIn] = useState(false);
+
+    //This works but I bet there is a better way. 
+    useEffect(()=>{
+        var cookie = Cookies.get('token');
+        let result = false;
+
+        if(cookie){
+            postRequest(JSON.stringify({'cookie':cookie}), 'check').then((data)=>{
+                if(data.hasOwnProperty("token") ){
+                    setLoggedIn(true);
+                }
+                else if (data.hasOwnProperty("error")) {
+                    //Will make this more advanced later. 
+                    console.log("ERROR!");
+                    Cookies.remove('token');
+                }
+                else{
+                    setLoggedIn(false);
+                    Cookies.remove('token');
+                }
+            })
+            
         }
         else{
-            return false;
+            setLoggedIn(false);
         }
-    }
-    const { isOpen, display } = openModal();
-    const [isLoggedIn, setLoggedIn] = useState(checkLoginState());
+    }, [isLoggedIn])
+
+
+
     const IamLoggedIn = false;
     const handleLoginSuccess = () => {
         display();
@@ -35,7 +57,6 @@ function Account() {
         <div>
             {isLoggedIn ? (
                 <div>
-                    {/* this changed not work will fix later*/}
                     <p>Welcome {sessionStorage.loginName}</p>
                     <button onClick={logout}>LogOut</button>
                 </div>
