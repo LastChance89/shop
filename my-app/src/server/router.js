@@ -3,6 +3,7 @@ const router = express.Router();
 const user = require('./db/model/user');
 const logger = require('./logging/logger')
 const jwt = require('jsonwebtoken')
+const config = require('./config.json')
 
 
 //need this to parse the request body. Without the body will be undefined. 
@@ -18,21 +19,13 @@ router.use('/', (req,res,next)=>{
     next();
 })
 
-router.post('/login', (req,res) =>{
 
+router.post('/login', (req,res) =>{
 
         user.findOne({"login_name":req.body.username, "password": req.body.password}).then( (data) =>{
             if(data){
-                const payload =  {
-                    user_l:{
-                        login_name:data.login_name
-                    }
-                }
-                const token = jwt.sign(payload,'random', {expiresIn: '20s'});
-                //res.status(200).cookie("token", token, {httpOnly:true, path:'/',domain: 'localhost'}).json({payload});
-                //res.cookie("token", token, {httpOnly:true}).send({login_name});
+                const token = createToken(data.login_name);
                 res.json({token})
-    
             } 
           }).catch((err)=>{
               logger.error(err);
@@ -45,7 +38,7 @@ router.post('/login', (req,res) =>{
 router.post('/check', (req,res)=>{
     var cookie = req.body.cookie;
     var payload = null;
-    jwt.verify(cookie,'random', (error, decode)=>{
+    jwt.verify(cookie, config.JWT_PASS, (error, decode)=>{
         if(error){
             payload ={
                 'error':error
@@ -53,15 +46,26 @@ router.post('/check', (req,res)=>{
             
         }
         else{
-            //console.log(decode);
-            payload ={
-                'token':cookie
+                payload ={
+                'token':createToken()
             };
+            
+
         }
     })
-    //junk return for now. 
     res.json(payload);
 
 });
+
+const createToken = (name) =>{
+    const payload =  {
+        user_l:{
+            login_name:name
+        }
+    }
+    const token = jwt.sign(payload, config.JWT_PASS, {expiresIn: config.JWT_TIMEOUT});
+    return token; 
+}
+
 
 module.exports = router;

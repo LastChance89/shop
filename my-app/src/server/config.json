@@ -1,0 +1,4 @@
+{
+    "JWT_PASS":"RANDOM_STUFF_HERE",
+    "JWT_TIMEOUT" : "20s"
+}
