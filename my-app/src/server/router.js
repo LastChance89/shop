@@ -12,20 +12,22 @@ router.use(express.json())
 
 //Add headers all URL endpoints
 router.use('/', (req,res,next)=>{
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers','*');
-    res.contentType('application/json');
-    
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+    res.setHeader('Access-Control-Allow-Headers','Access-Control-Allow-Headers, withCredentials,Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials','true');
+    res.contentType('application/json'); 
     next();
 })
 
 
 router.post('/login', (req,res) =>{
 
-        user.findOne({"login_name":req.body.username, "password": req.body.password}).then( (data) =>{
+        user.findOne({"login_name":'test', "password": 'test'}).then( (data) =>{
             if(data){
-                const token = createToken(data.login_name);
-                res.json({token})
+                const token = createToken(data.login_name, false);
+                const refreshToken = createToken(data.login_name, true);
+                res.cookie('jwt',refreshToken,{httpOnly:true, sameStie: 'lax'});
+                res.json({token});
             } 
           }).catch((err)=>{
               logger.error(err);
@@ -36,9 +38,16 @@ router.post('/login', (req,res) =>{
 );
 
 router.post('/check', (req,res)=>{
-    var cookie = req.body.cookie;
+
+
+});
+
+
+
+router.post('/refresh', (req,res)=>{
+    const rtoken = req.headers.cookie;
     var payload = null;
-    jwt.verify(cookie, config.JWT_PASS, (error, decode)=>{
+    jwt.verify(rtoken, config.JWT_PASS, (error, decode)=>{
         if(error){
             payload ={
                 'error':error
@@ -47,7 +56,7 @@ router.post('/check', (req,res)=>{
         }
         else{
                 payload ={
-                'token':createToken()
+                'token':createToken(decode.user_l.login_name, false)
             };
             
 
@@ -57,13 +66,29 @@ router.post('/check', (req,res)=>{
 
 });
 
-const createToken = (name) =>{
+router.post('/test', (req,res)=>{
+    payload ={
+        'test':'test'
+    };
+    res.json()
+})
+
+
+
+const createToken = (name, refresh) =>{
     const payload =  {
         user_l:{
             login_name:name
         }
     }
-    const token = jwt.sign(payload, config.JWT_PASS, {expiresIn: config.JWT_TIMEOUT});
+    var token = null;
+    if(refresh){
+        token = jwt.sign(payload, config.JWT_PASS, {expiresIn: config.MAX_AGE});
+    }
+    else{
+        
+        token = jwt.sign(payload, config.JWT_PASS, {expiresIn: config.JWT_TIMEOUT});
+    }
     return token; 
 }
 

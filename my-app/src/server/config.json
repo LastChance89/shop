@@ -1,4 +1,5 @@
 {
     "JWT_PASS":"RANDOM_STUFF_HERE",
-    "JWT_TIMEOUT" : "20s"
+    "JWT_TIMEOUT" : "20m",
+    "MAX_AGE" : "1d"
 }

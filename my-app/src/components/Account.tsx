@@ -16,11 +16,12 @@ function Account() {
 
     //This works but I bet there is a better way. 
     useEffect(()=>{
-        var cookie = Cookies.get('token');
+        var token = Cookies.get('token');
+        console.log(token)
         let result = false;
 
-        if(cookie){
-            postRequest(JSON.stringify({'cookie':cookie}), 'check').then((data)=>{
+        if(token){
+            postRequest(JSON.stringify({'token':token}), 'refresh').then((data)=>{
                 if(data.hasOwnProperty("token") ){
                     setLoggedIn(true);
                 }

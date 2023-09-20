@@ -30,7 +30,7 @@ function Login(props: LoginPage){
         postRequestLogin(data).then((data) => {
             if (data != "") {
                 sessionStorage.setItem('loginName',loginName);
-                Cookies.set('token',data.token,{'SameSite':'Lax'});
+                Cookies.set('token',data.token,{'SameSite':'lax'});
                 props.close()
             }
         });

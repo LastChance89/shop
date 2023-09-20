@@ -6,7 +6,10 @@ const datbase = require("./db/db.js")
 
 
 app.use('/router',router);
-app.use(cors());
+app.use(cors({
+        credentials: true,
+        origin: "http://localhost:3000",
+    }));
 app.get('*', (req,res)=>{
     console.log("Invalid URL");
     res.send('invalid url');
