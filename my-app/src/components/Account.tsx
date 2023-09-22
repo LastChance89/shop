@@ -7,6 +7,7 @@ import Popup from './Modal/PopupModal'
 import openModal from './Modal/ModalHook';
 import Login from './Login/Login';
 import Cookies from 'js-cookie';
+import { error } from 'console';
 
 
 function Account() {
@@ -17,7 +18,6 @@ function Account() {
     //This works but I bet there is a better way. 
     useEffect(()=>{
         var token = Cookies.get('token');
-        console.log(token)
         let result = false;
 
         if(token){
@@ -26,7 +26,7 @@ function Account() {
                     setLoggedIn(true);
                 }
                 else if (data.hasOwnProperty("error")) {
-                    //Will make this more advanced later. 
+                    console.log(data.error)
                     console.log("ERROR!");
                     Cookies.remove('token');
                 }

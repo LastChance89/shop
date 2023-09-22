@@ -45,10 +45,11 @@ router.post('/check', (req,res)=>{
 
 
 router.post('/refresh', (req,res)=>{
-    const rtoken = req.headers.cookie;
+    const token = req.headers.cookie.split("=")[1];
     var payload = null;
-    jwt.verify(rtoken, config.JWT_PASS, (error, decode)=>{
+    jwt.verify(token, config.JWT_PASS, (error, decode)=>{
         if(error){
+            logger.error(error);
             payload ={
                 'error':error
             };
