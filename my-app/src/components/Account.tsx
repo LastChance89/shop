@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 
 import './Account.css'
 import { useState, ChangeEvent } from "react";
@@ -15,8 +15,7 @@ function Account() {
     const { isOpen, display } = openModal();
     const [isLoggedIn, setLoggedIn] = useState(false);
 
-    //This works but I bet there is a better way. 
-    useEffect(()=>{
+    useLayoutEffect (()=>{
         var token = Cookies.get('token');
         let result = false;
 

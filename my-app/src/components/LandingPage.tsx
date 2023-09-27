@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { postRequest } from "../services/PostService";
+import { postRequesTest, postRequest } from "../services/PostService";
 
 function LandingPage() {
 
-    const navigate = useNavigate();
+    
+    var inventoryList;
+
+    useLayoutEffect(()=>{
+        postRequesTest(JSON.stringify({'a':'f'}), 'loadInventoryMainPage').then((data)=>{
+            inventoryList = data;
+        });
+    });
+
     
     const buttonClick = () => {
 
@@ -22,9 +30,24 @@ function LandingPage() {
 
     return (
        <div>
-       <h1>Placeholder</h1>
+       <h1>Inventory</h1>
+       <table> 
+        <tbody>
+        <tr>
+            {<th>Col1</th>}
+        </tr>
+        <tr>
+            <td> Item 1
+                <div> 
+                <button onClick={buttonClick}>Add to Cart</button>
+                </div>
 
-       <button onClick={buttonClick}>test</button>
+            </td>
+        </tr>
+        </tbody>
+       </table>
+
+      
        </div>
 
     );

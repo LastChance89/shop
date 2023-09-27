@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const user = require('./db/model/user');
+const items = require('./db/model/item')
 const logger = require('./logging/logger')
 const jwt = require('jsonwebtoken')
 const config = require('./config.json')
@@ -37,8 +38,12 @@ router.post('/login', (req,res) =>{
     
 );
 
-router.post('/check', (req,res)=>{
-
+router.post('/loadInventoryMainPage', (req,res)=>{
+    var inventory = {}; 
+    items.find({}, ['-_id']).limit(5).then((data)=>{
+        inventory = data;
+        res.json(inventory);
+    });
 
 });
 
