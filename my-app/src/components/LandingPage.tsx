@@ -6,13 +6,14 @@ import { postRequesTest, postRequest } from "../services/PostService";
 function LandingPage() {
 
     
-    var inventoryList;
+    const [inventoryList, setInventoryList] = useState([]);
 
     useLayoutEffect(()=>{
         postRequesTest(JSON.stringify({'a':'f'}), 'loadInventoryMainPage').then((data)=>{
-            inventoryList = data;
+            setInventoryList(data);
         });
-    });
+        //square brackets keep from infinate loop. Only do first time.
+    }, [] );
 
     
     const buttonClick = () => {
@@ -34,16 +35,15 @@ function LandingPage() {
        <table> 
         <tbody>
         <tr>
-            {<th>Col1</th>}
+            {inventoryList.map((row, index)=>{
+                return <th key = {index}>{row['item_name']}</th>
+            })}
         </tr>
-        <tr>
-            <td> Item 1
-                <div> 
-                <button onClick={buttonClick}>Add to Cart</button>
-                </div>
-
-            </td>
-        </tr>
+        
+        {inventoryList.map((row, index)=>{
+            return <tr key = {index}><td>Cost: {row['item_cost']}</td><td> Inventory Left {row['inventory']}</td></tr>
+        })}
+        
         </tbody>
        </table>
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import LandingPage from './components/LandingPage';
 import Account from './components/Account';
 import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from './AppRoutes';
