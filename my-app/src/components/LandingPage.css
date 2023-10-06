@@ -1,0 +1,8 @@
+.items{
+    display: inline-block;
+    width: 8%;
+    padding-right: 8%;
+}
+.itemPage {
+    width: 100vw;
+}
